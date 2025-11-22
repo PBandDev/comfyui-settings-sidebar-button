@@ -25,7 +25,7 @@ function observeSidebarButton(attempt = 1) {
   );
 
   if (sidebarButtonEl) {
-    console.log("[Settings Sidebar Button] Sidebar button element found");
+    console.log("[Settings Sidebar Button] Sidebar button found");
 
     const observer = new MutationObserver((mutationList) => {
       for (const mutation of mutationList) {

@@ -1,6 +1,6 @@
 {
   "name": "comfyui-settings-sidebar-button",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ComfyUI extension to add a settings button to the sidebar",
   "type": "module",
   "scripts": {

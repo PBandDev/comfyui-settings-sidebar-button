@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-settings-sidebar-button"
+description = "ComfyUI extension to add a settings button to the sidebar"
+version = "1.0.0"
+readme = "README.md"
+license = { file = "LICENSE" }
+
+[project.urls]
+Repository = "https://github.com/PBandDev/comfyui-settings-sidebar-button"
+
+[tool.comfy]
+PublisherId = "pbanddev"
+DisplayName = "Settings Sidebar Button"
+Icon = "https://raw.githubusercontent.com/PBandDev/comfyui-settings-sidebar-button/main/assets/cog.svg"
+requires-comfyui = ">=0.3.0"

@@ -1,0 +1,33 @@
+{
+  "name": "comfyui-settings-sidebar-button",
+  "version": "1.0.0",
+  "description": "ComfyUI extension to add a settings button to the sidebar",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "watch": "tsc && vite build --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "comfyui",
+    "custom node",
+    "custom",
+    "node",
+    "extension",
+    "settings",
+    "sidebar",
+    "button"
+  ],
+  "author": "PBandDev",
+  "license": "AGPL-3.0",
+  "packageManager": "pnpm@10.17.1",
+  "dependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
+  },
+  "devDependencies": {
+    "@comfyorg/comfyui-frontend-types": "^1.32.1",
+    "@types/node": "^24.10.0"
+  }
+}

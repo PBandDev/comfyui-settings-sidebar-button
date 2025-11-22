@@ -1,0 +1,51 @@
+name: Bump Version
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: "Version bump type"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+
+jobs:
+  bump-version:
+    name: Bump version and create tag
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'PBandDev' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump version
+        id: bump
+        uses: callowayproject/bump-my-version@master
+        env:
+          BUMPVERSION_TAG: "true"
+        with:
+          args: ${{ github.event.inputs.bump_type }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.bump.outputs.bumped == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.bump.outputs.current-version }}
+          name: Release v${{ steps.bump.outputs.current-version }}
+          body: |
+            ## Version ${{ steps.bump.outputs.current-version }}
+
+            Bumped from version ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}
+
+            This release was automatically created by the version bump workflow.
+          draft: false
+          prerelease: false
+          generate_release_notes: true

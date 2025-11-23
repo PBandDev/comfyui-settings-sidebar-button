@@ -10,48 +10,55 @@ declare global {
 
 const BUTTON_ID = "settingsSidebarButton";
 
-app.extensionManager.registerSidebarTab({
-  id: BUTTON_ID,
-  icon: "pi pi-cog",
-  title: "Settings",
-  tooltip: "Open Settings",
-  type: "custom",
-  render: (_el) => {},
-});
-
-function observeSidebarButton(attempt = 1) {
-  const sidebarButtonEl = document.querySelector<HTMLElement>(
-    `button[class*="${BUTTON_ID}"]`
-  );
-
-  if (sidebarButtonEl) {
-    console.log("[Settings Sidebar Button] Sidebar button found");
-
-    const observer = new MutationObserver((mutationList) => {
-      for (const mutation of mutationList) {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "class" &&
-          mutation.target === sidebarButtonEl &&
-          sidebarButtonEl.classList.contains("side-bar-button-selected")
-        ) {
-          sidebarButtonEl.click();
-          app.extensionManager.command.execute("Comfy.ShowSettingsDialog");
-        }
-      }
+app.registerExtension({
+  name: "settingsSidebarButton",
+  async setup() {
+    app.extensionManager.registerSidebarTab({
+      id: BUTTON_ID,
+      icon: "pi pi-cog",
+      title: "Settings",
+      tooltip: "Open Settings",
+      type: "custom",
+      render: (_el) => {},
     });
 
-    observer.observe(sidebarButtonEl, { attributes: true });
-    return;
-  }
+    const setupButton = (button: HTMLElement): void => {
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (
+            mutation.type === "attributes" &&
+            mutation.attributeName === "class" &&
+            button.classList.contains("side-bar-button-selected")
+          ) {
+            button.click();
+            app.extensionManager.command.execute("Comfy.ShowSettingsDialog");
+          }
+        }
+      });
 
-  if (attempt < 5) {
-    setTimeout(() => observeSidebarButton(attempt + 1), 250);
-  } else {
-    console.warn(
-      "[Settings Sidebar Button] Sidebar button not found after 5 attempts."
+      observer.observe(button, { attributes: true });
+    };
+
+    const button = document.querySelector<HTMLElement>(
+      `button[class*="${BUTTON_ID}"]`
     );
-  }
-}
 
-observeSidebarButton();
+    if (button) {
+      console.log("[Settings Sidebar Button] Button found");
+      setupButton(button);
+    } else {
+      const observer = new MutationObserver(() => {
+        const foundButton = document.querySelector<HTMLElement>(
+          `button[class*="${BUTTON_ID}"]`
+        );
+
+        if (foundButton) {
+          observer.disconnect();
+          setupButton(foundButton);
+        }
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+  },
+});
